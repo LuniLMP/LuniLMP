@@ -1,0 +1,63 @@
+function Kick()
+    game.Players.LocalPlayer:Kick("LOLLL!! Kiddd!! It isn't easy to get my script key!!")
+end
+
+SCRIPT_CFG = {
+    Workspace = "ArisuProject/BloxFruit/main",
+    Config_Define = game.Players.LocalPlayer.Name,
+    Config_Type = ".json"
+}
+
+-- Function to deploy the script
+function deploy()
+    if not isfolder(SCRIPT_CFG.Workspace) then
+        makefolder(SCRIPT_CFG.Workspace)
+    end
+
+    if not isfile(SCRIPT_CFG.Workspace .. "/" .. SCRIPT_CFG.Config_Define .. SCRIPT_CFG.Config_Type) then
+        writefile(SCRIPT_CFG.Workspace .. "/" .. SCRIPT_CFG.Config_Define .. SCRIPT_CFG.Config_Type, game:GetService"HttpService":JSONEncode(nexus))
+    else
+        nexus = game:GetService"HttpService":JSONDecode(readfile(SCRIPT_CFG.Workspace .. "/" .. SCRIPT_CFG.Config_Define .. SCRIPT_CFG.Config_Type))
+    end
+end
+
+-- Function to save the configuration
+function save()
+    if not nexus then
+        return
+    end
+
+    spawn(function ()
+        writefile(SCRIPT_CFG.Workspace .. "/" .. SCRIPT_CFG.Config_Define .. SCRIPT_CFG.Config_Type, game:GetService"HttpService":JSONEncode(nexus))
+    end)
+end
+
+-- Function to get user input for IP address
+function getUserIPInput()
+    local userInput = request({
+        Url = "https://api.ipify.org/",
+        Method = "GET",
+    })
+    print(userInput.Body)
+end
+
+-- Function to read and check IP
+function readAndCheckIP()
+    local savedIP = "148.135.150.223"  -- Assuming nexus has an 'IP' field
+
+    local userInputIP = getUserIPInput()
+
+    if savedIP == userInputIP then
+        script_key = "ZPGWRtqmCPgCGcCtknokgRMKusltZjfy"
+        getgenv().Team = "Pirates"
+        getgenv().FixCrash = false -- Turn it On For Hopping Server, Improve Performance But Silent Aim On Mob And Player
+        getgenv().FixCrash2 = false -- Turn it On For Hopping Server, Improve Performance But Will Remove Speed Changer
+        loadstring(game:HttpGet("https://api.luarmor.net/files/v3/loaders/3b2169cf53bc6104dabe8e19562e5cc2.lua"))()
+    else
+        kick()
+    end
+end
+
+-- Example usage
+deploy()
+readAndCheckIP()
